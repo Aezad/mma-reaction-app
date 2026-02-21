@@ -1,0 +1,68 @@
+:root{
+  --bg: #070707;
+  --panel: rgba(255,255,255,0.03);
+  --accent: #ffcc00;
+  --text: #fff;
+  --muted: #bdbdbd;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  background: linear-gradient(180deg,#040404,#0b0b0b);
+  color:var(--text);
+  font-family: Inter, Arial, sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:28px;
+}
+.app{
+  width:980px;
+  max-width:96%;
+  background:var(--panel);
+  padding:22px;
+  border-radius:12px;
+  box-shadow:0 12px 32px rgba(0,0,0,0.6);
+}
+h1{margin:0 0 12px 0;font-size:22px}
+.controls-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:14px;
+}
+.control{display:flex;flex-direction:column;gap:6px}
+.control label{font-size:13px;color:var(--muted)}
+.control input,.control select{
+  padding:8px 10px;border-radius:8px;border:none;background:rgba(255,255,255,0.03);color:var(--text);
+}
+.buttons{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+button{
+  padding:10px 16px;border-radius:8px;border:none;cursor:pointer;font-weight:600;
+  background:#333;color:var(--text);
+}
+#start{background:#28a745;color:#000}
+#stop{background:#dc3545}
+#reset{background:#ffaa00;color:#000}
+#pause,#resume{background:#666}
+.status{display:flex;gap:18px;align-items:center;margin-bottom:16px}
+.stat{color:var(--muted)}
+.call-area{display:flex;justify-content:center;align-items:center;height:140px;}
+.call-text{
+  font-size:56px;font-weight:800;color:var(--accent);
+  min-height:68px;display:flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:12px;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.call-flash{
+  box-shadow:0 0 40px 12px rgba(255,204,0,0.14);
+  transform: scale(1.02);
+}
+/* flash border on the app container */
+.app.flash-white{outline:6px solid rgba(255,255,255,0.06);box-shadow:0 12px 40px rgba(255,255,255,0.02);}
+.app.flash-red{outline:6px solid rgba(255,0,0,0.06);}
+.small{font-size:12px;color:var(--muted);margin-top:10px;text-align:center}
+@media (max-width:760px){
+  .controls-grid{grid-template-columns:repeat(2,1fr)}
+  .call-text{font-size:32px;padding:12px}
+}
