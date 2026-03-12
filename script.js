@@ -15,7 +15,13 @@ const singles = [
 
 const combos = [
   "Jab Cross","Jab Cross Hook","Cross Hook Low Kick","Jab Cross Uppercut",
-  "Jab Jab Cross","Cross Body Hook","Jab Cross Hook Low Kick"
+  "Jab Jab Cross","Cross Body Hook","Jab Cross Hook Low Kick",
+  "Jab Outside Low Kick","Jab Cross Lead Hook Pivot Right",
+  "Jab Cross to Body Lead Hook to Head",
+  "Jab Cross Level Change Feint Overhand Right",
+  "Slip outside their jab ross Lead Hook Low Kick",
+  "Jab Cross Lead Hook Rear High Kick",
+  "Jab Cross Lead Hook Uppercut Cross"
 ];
 
 const defenses = [
@@ -40,6 +46,32 @@ let audioCtx = null;
 let running = false;
 let paused = false;
 let callTimer = null;
+
+/////////////////////////
+// WAKE LOCK (KEEP SCREEN ON)
+/////////////////////////
+let wakeLock = null;
+
+async function enableWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request("screen");
+      console.log("Wake Lock enabled");
+    }
+  } catch (err) {
+    console.log("Wake Lock error:", err);
+  }
+}
+
+function disableWakeLock() {
+  if (wakeLock !== null) {
+    wakeLock.release()
+      .then(() => {
+        wakeLock = null;
+        console.log("Wake Lock released");
+      });
+  }
+}
 
 /////////////////////////
 // AUDIO / VOICE SETUP
@@ -78,17 +110,14 @@ loadVoices();
 function getMaleVoice(){
   if(!cachedVoices.length) return null;
 
-  // 1️⃣ Explicit male voices
   let male = cachedVoices.find(v => /male/i.test(v.name));
   if(male) return male;
 
-  // 2️⃣ Common male voice names
   male = cachedVoices.find(v =>
     /David|Mark|James|John|Paul|Daniel|Google UK English Male/i.test(v.name)
   );
   if(male) return male;
 
-  // 3️⃣ Any English voice fallback
   male = cachedVoices.find(v => v.lang && v.lang.startsWith('en'));
   if(male) return male;
 
@@ -103,7 +132,6 @@ function speak(text){
 
   if(maleVoice) utterance.voice = maleVoice;
 
-  // Deeper tone
   utterance.pitch = 0.75;
   utterance.rate = 1.05;
   utterance.volume = 1;
@@ -148,6 +176,9 @@ function generateCall(){
 function startTraining(){
   if(running) return;
   running = true;
+
+  enableWakeLock(); // 🔥 keep screen awake
+
   playBell();
   nextCall();
 }
@@ -156,6 +187,8 @@ function stopTraining(){
   running = false;
   clearTimeout(callTimer);
   speechSynthesis.cancel();
+
+  disableWakeLock(); // 🔥 allow screen sleep again
 }
 
 function nextCall(){
